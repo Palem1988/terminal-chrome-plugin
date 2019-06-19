@@ -9,12 +9,14 @@ const allowedOrigins = [
  */
 const responseListener = function (details) {
 	// iff the request is originating from the terminal
-	if (allowedOrigins.indexOf(details.initiator) === -1) return
-	console.log('res', details)
+	if (allowedOrigins.indexOf(details.initiator) === -1) return { };
 
 	// add the CORS headers
-	details.responseHeaders.push({ name: 'Access-Control-Allow-Headers', value: '*' });
-	details.responseHeaders.push({ name: 'Access-Control-Allow-Methods', value: 'GET, PUT, POST, DELETE, HEAD, OPTIONS' })
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', '*');
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', '*');
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, OPTIONS');
+
+	console.log(details)
 
 	return { responseHeaders: details.responseHeaders };
 };
@@ -25,8 +27,8 @@ const responseListener = function (details) {
  */
 function toggle () {
 	chrome.storage.local.get({ active: true }, function (result) {
-		if (result.active) off()
-		else on()
+		if (result.active) _off()
+		else _on()
 	});
 }
 
@@ -34,13 +36,15 @@ function toggle () {
 /**
  * Switches the plugin on
  */
-function on () {
+function _on () {
 	// set flag
 	chrome.storage.local.set({ active: true });
 
 	// remove & add listeners
-	chrome.webRequest.onHeadersReceived.removeListener(responseListener);
-	chrome.webRequest.onHeadersReceived.addListener(responseListener, { urls: ['<all_urls>'] }, ['blocking', 'responseHeaders']);
+	if (chrome.webRequest.onHeadersReceived.hasListener(responseListener)) {
+        chrome.webRequest.onHeadersReceived.removeListener(responseListener)
+    }
+	chrome.webRequest.onHeadersReceived.addListener(responseListener, { urls: ['<all_urls>'] }, ['blocking', 'responseHeaders', 'extraHeaders']);
 
 	// set icon
 	chrome.browserAction.setIcon({ path: 'on.png' });
@@ -50,20 +54,37 @@ function on () {
 /**
  * Switches the plugin off
  */
-function off () {
+function _off () {
 	// set flag
 	chrome.storage.local.set({ active: false });
 
 	// remove listners
-	chrome.webRequest.onHeadersReceived.removeListener(responseListener);
+    if (chrome.webRequest.onHeadersReceived.hasListener(responseListener)) {
+        chrome.webRequest.onHeadersReceived.removeListener(responseListener)
+    }
 
 	// set icon
 	chrome.browserAction.setIcon({ path: 'off.png' });
+
+	chrome.webRequest.handlerBehaviorChanged();
+}
+
+
+function _replaceOrInsert (array, key, value) {
+	const index = array.findIndex(function (item) { return item.name === key })
+	if (index >= 0) array[index].value = value;
+	else array.push({ name: key, value: value });
 }
 
 
 /* On install */
 chrome.runtime.onInstalled.addListener(function(){
 	chrome.browserAction.onClicked.addListener(toggle);
-	on(); // enable the plugin by default
+	_on(); // enable the plugin by default
+
+	// Error handler
+	chrome.webRequest.onErrorOccurred.addListener(
+        function (info){ console.log('ForceCORS was unable to modify headers for: '+info.url +' - '+info.error) },
+        { urls: ['<all_urls>'] }
+    );
 });

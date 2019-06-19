@@ -15,7 +15,7 @@
     "permissions": [
         "storage",
         "webRequest",
-        "webRequestBlocking",
+		"webRequestBlocking",
         "<all_urls>"
     ],
     "web_accessible_resources": [
