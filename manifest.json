@@ -7,7 +7,7 @@
   		"scripts": ["background.js"]
   },
 	"browser_action": {
-		"default_icon": "logo.png",
+		"default_icon": "off.png",
 		"default_title": "CryptoControl"
 	},
   "permissions": [
@@ -17,6 +17,6 @@
 		"<all_urls>"
   ],
   "web_accessible_resources": [
-		"logo.png"
+		"off.png", "on.png"
 	]
 }
