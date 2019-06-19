@@ -5,7 +5,7 @@ var requestListener = function(details){
 	var flag = false,
 		rule = {
 			name: "Origin",
-			value: "https://terminal.cryptocontrol.io/"
+			value: "http://terminal-test.cryptocontrol.io/*"
 		};
 	var i;
 
@@ -69,6 +69,7 @@ chrome.runtime.onInstalled.addListener(function(){
 
 /*Reload settings*/
 function reload() {
+
 	chrome.storage.local.get({'active': false, 'urls': ["<all_urls>"], 'exposedHeaders': ''}, function(result) {
 
 		exposedHeaders = result.exposedHeaders;
