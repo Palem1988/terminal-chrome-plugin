@@ -1,8 +1,0 @@
-{
-  "name": "Cryptocontrol",
-  "version": "1.0.0",
-  "dependencies": {
-    "ionic": "~0.9.27",
-    "jquery": "~2.1.1"
-  }
-}
