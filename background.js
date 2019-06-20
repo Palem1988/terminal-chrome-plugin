@@ -17,8 +17,6 @@ const responseListener = function (details) {
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', '*');
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, OPTIONS');
 
-	console.log(details)
-
 	return { responseHeaders: details.responseHeaders };
 };
 
