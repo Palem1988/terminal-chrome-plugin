@@ -36,6 +36,8 @@ function toggle () {
  * Switches the plugin on
  */
 function _on () {
+	console.log('plugin is switched on')
+
 	// set flag
 	chrome.storage.local.set({ active: true });
 
@@ -54,6 +56,8 @@ function _on () {
  * Switches the plugin off
  */
 function _off () {
+	console.log('plugin is switched off')
+
 	// set flag
 	chrome.storage.local.set({ active: false });
 
@@ -81,9 +85,9 @@ chrome.runtime.onInstalled.addListener(function(){
 	chrome.browserAction.onClicked.addListener(toggle);
 	_on(); // enable the plugin by default
 
-	// Error handler
-	chrome.webRequest.onErrorOccurred.addListener(
-        function (info){ console.log('CCIO was unable to modify headers for: '+info.url +' - '+info.error) },
-        { urls: ['<all_urls>'] }
-    );
+	// // Error handler
+	// chrome.webRequest.onErrorOccurred.addListener(
+    //     function (info){ console.log('CCIO was unable to modify headers for: '+info.url +' - '+info.error) },
+    //     { urls: ['<all_urls>'] }
+    // );
 });
