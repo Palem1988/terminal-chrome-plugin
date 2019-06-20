@@ -1,6 +1,7 @@
 const allowedOrigins = [
 	'https://terminal-test.cryptocontrol.io',
 	'https://terminal.cryptocontrol.io',
+	'http://localhost:3000'
 ]
 
 
@@ -84,7 +85,7 @@ chrome.runtime.onInstalled.addListener(function(){
 
 	// Error handler
 	chrome.webRequest.onErrorOccurred.addListener(
-        function (info){ console.log('ForceCORS was unable to modify headers for: '+info.url +' - '+info.error) },
+        function (info){ console.log('CCIO was unable to modify headers for: '+info.url +' - '+info.error) },
         { urls: ['<all_urls>'] }
     );
 });
