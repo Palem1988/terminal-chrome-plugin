@@ -8,17 +8,25 @@ const allowedOrigins = [
 /**
  * Modifies the resposne to include the CORS headersr
  */
-const responseListener = function (details) {
+function responseHeadersListener (details) {
 	// iff the request is originating from the terminal
 	if (allowedOrigins.indexOf(details.initiator) === -1) return { };
+	console.log('intercepting', details.initiator)
 
 	// add the CORS headers
-	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', '*');
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', '*');
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, OPTIONS');
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', '*');
 
 	return { responseHeaders: details.responseHeaders };
 };
+
+
+function responseBodyListener (details) {
+	if (allowedOrigins.indexOf(details.initiator) === -1) return { };
+	console.log('intercepting body', details)
+	return { }
+}
 
 
 /**
@@ -42,10 +50,11 @@ function _on () {
 	chrome.storage.local.set({ active: true });
 
 	// remove & add listeners
-	if (chrome.webRequest.onHeadersReceived.hasListener(responseListener)) {
-        chrome.webRequest.onHeadersReceived.removeListener(responseListener)
-    }
-	chrome.webRequest.onHeadersReceived.addListener(responseListener, { urls: ['<all_urls>'] }, ['blocking', 'responseHeaders', 'extraHeaders']);
+    chrome.webRequest.onHeadersReceived.removeListener(responseHeadersListener);
+	chrome.webRequest.onHeadersReceived.addListener(responseHeadersListener, { urls: ['<all_urls>'] }, ['blocking', 'responseHeaders', 'extraHeaders']);
+
+	// chrome.webRequest.onCompleted.removeListener(responseBodyListener);
+	// chrome.webRequest.onCompleted.addListener(responseBodyListener, { urls: ['<all_urls>'] });
 
 	// set icon
 	chrome.browserAction.setIcon({ path: 'on.png' });
@@ -62,9 +71,7 @@ function _off () {
 	chrome.storage.local.set({ active: false });
 
 	// remove listners
-    if (chrome.webRequest.onHeadersReceived.hasListener(responseListener)) {
-        chrome.webRequest.onHeadersReceived.removeListener(responseListener)
-    }
+    chrome.webRequest.onHeadersReceived.removeListener(responseHeadersListener)
 
 	// set icon
 	chrome.browserAction.setIcon({ path: 'off.png' });
