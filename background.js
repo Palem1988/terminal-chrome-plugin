@@ -11,12 +11,14 @@ const allowedOrigins = [
 function responseHeadersListener (details) {
 	// iff the request is originating from the terminal
 	if (allowedOrigins.indexOf(details.initiator) === -1) return { };
-	console.log('intercepting', details.initiator)
+	console.log('intercepting', details.url)
 
 	// add the CORS headers
-	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', '*');
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', details.initiator);
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, OPTIONS');
-	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', '*');
+	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', details.initiator);
+
+	console.log(details.responseHeaders)
 
 	return { responseHeaders: details.responseHeaders };
 };
@@ -81,7 +83,7 @@ function _off () {
 
 
 function _replaceOrInsert (array, key, value) {
-	const index = array.findIndex(function (item) { return item.name === key })
+	const index = array.findIndex(function (item) { return item.name.toLowerCase() === key.toLowerCase() })
 	if (index >= 0) array[index].value = value;
 	else array.push({ name: key, value: value });
 }
