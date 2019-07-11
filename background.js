@@ -11,14 +11,12 @@ const allowedOrigins = [
 function responseHeadersListener (details) {
 	// iff the request is originating from the terminal
 	if (allowedOrigins.indexOf(details.initiator) === -1) return { };
-	console.log('intercepting', details.url)
+	// console.log('intercepting', details.url)
 
 	// add the CORS headers
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Headers', details.initiator);
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, HEAD, OPTIONS');
 	_replaceOrInsert(details.responseHeaders, 'Access-Control-Allow-Origin', details.initiator);
-
-	console.log(details.responseHeaders)
 
 	return { responseHeaders: details.responseHeaders };
 };
