@@ -91,3 +91,26 @@ chrome.runtime.onInstalled.addListener(function(){
     //     { urls: ['<all_urls>'] }
     // );
 });
+
+
+chrome.runtime.onMessageExternal.addListener(function(request, sender, sendResponse) {
+	if (request) {
+		if (request.message) {
+			if (request.message == "version") {
+				sendResponse({version: '1.0'});
+			}
+		}
+	}
+	return true;
+	}
+);
+
+
+function messagePageScript() {
+  window.postMessage({
+    direction: 'from-content-script',
+    message: 'Message from the content script'
+  }, "*");
+  console.log('extension message')
+};
+messagePageScript();

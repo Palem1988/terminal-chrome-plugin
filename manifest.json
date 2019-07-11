@@ -21,5 +21,8 @@
     "web_accessible_resources": [
         "off.png",
         "on.png"
-    ]
+    ],
+    "externally_connectable": {
+        "matches": ["*://localhost/*", "*://cryptocontrol.io/*"]
+    }
 }
