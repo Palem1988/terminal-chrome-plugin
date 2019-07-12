@@ -12,6 +12,9 @@
         "default_icon": "off.png",
         "default_title": "CryptoControl"
     },
+    "externally_connectable": {
+        "matches": ["*://*.cryptocontrol.io/*", "*://localhost/*"]
+    },
     "permissions": [
         "storage",
         "webRequest",
