@@ -1,0 +1,4 @@
+bower_components/
+*.crx
+*.pem
+*.zip
