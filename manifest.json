@@ -7,7 +7,7 @@
       "48": "cryptocontrol.png",
       "128": "cryptocontrol.png"
     },
-    "version": "1.1.0",
+    "version": "1.2.0",
     "background": {
         "scripts": [
             "background.js"
@@ -17,14 +17,8 @@
         "default_icon": "off.png",
         "default_title": "CryptoControl"
     },
-    "externally_connectable": {
-        "matches": ["*://*.cryptocontrol.io/*", "*://localhost/*"]
-    },
     "permissions": [
-        "storage",
-        "webRequest",
-		"webRequestBlocking",
-        "<all_urls>"
+        "storage"
     ],
     "web_accessible_resources": [
         "off.png",
