@@ -7,7 +7,7 @@
       "48": "cryptocontrol.png",
       "128": "cryptocontrol.png"
     },
-    "version": "1.0.0",
+    "version": "1.1.0",
     "background": {
         "scripts": [
             "background.js"
