@@ -22,5 +22,11 @@
         "webRequest",
         "webRequestBlocking",
         "<all_urls>"
-    ]
+    ],
+    "externally_connectable": {
+        "matches": [
+            "*://localhost/*",
+            "*://cryptocontrol.io/*"
+        ]
+    }
 }

@@ -46,33 +46,34 @@ chrome.runtime.onInstalled.addListener(function(){
 		{ urls: ['<all_urls>'] },
 		['blocking', 'responseHeaders', 'extraHeaders']
 	);
+});
 
-	/**
-	 * Handle messages coming in from the terminal
-	 *
-	 * from https://stackoverflow.com/questions/55214828/how-to-stop-corb-from-blocking-requests-to-data-resources-that-respond-with-cors
-	 * and https://developer.chrome.com/apps/messaging
-	 * and https://www.chromium.org/Home/chromium-security/extension-content-script-fetches
-	 */
-	chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
-		if (request == 'version') return sendResponse(true);
 
-		const options = request.options || {}
-		// options.mode = 'no-cors'
+/**
+ * Handle messages coming in from the terminal
+ *
+ * from https://stackoverflow.com/questions/55214828/how-to-stop-corb-from-blocking-requests-to-data-resources-that-respond-with-cors
+ * and https://developer.chrome.com/apps/messaging
+ * and https://www.chromium.org/Home/chromium-security/extension-content-script-fetches
+ */
+chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResponse) {
+	if (request == 'version') return sendResponse(true);
 
-		fetch(request.url, options).then(function (response) {
-			return response.text().then(function (text) {
-				const result = {
-					body: text,
-					status: response.status,
-					statusText: response.statusText
-				};
+	const options = request.options || {}
+	// options.mode = 'no-cors'
 
-				sendResponse([result, null]);
-		});
-		}, function (error) { sendResponse([null, error]); });
+	fetch(request.url, options).then(function (response) {
+		return response.text().then(function (text) {
+			const result = {
+				body: text,
+				status: response.status,
+				statusText: response.statusText
+			};
 
-		// Will respond asynchronously.
-		return true;
+			sendResponse([result, null]);
 	});
+	}, function (error) { sendResponse([null, error]); });
+
+	// Will respond asynchronously.
+	return true;
 });
