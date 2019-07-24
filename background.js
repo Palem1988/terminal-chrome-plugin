@@ -68,7 +68,6 @@ chrome.runtime.onMessageExternal.addListener(function (request, sender, sendResp
 	// options.mode = 'no-cors'
 
 	fetch(request.url, options).then(function (response) {
-		console.log(response)
 		return response.text().then(function (text) {
 			const result = {
 				body: text,
